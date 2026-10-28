@@ -3,6 +3,7 @@ package es.iesisidra.datastock.ui;
 import es.iesisidra.datastock.servicio.Inventario;
 import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
+import es.iesisidra.datastock.servicio.ExploradorFicheros;
 import es.iesisidra.datastock.servicio.ImportarJson;
 
 /**
@@ -35,7 +36,11 @@ public class MenuPrincipal {
             System.out.println("0. Salir");
             opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 6);
             switch (opcion) {
-                case 1 -> pendiente("RF-FIC-01 · Explorar ficheros y directorios");
+                case 1 -> {
+                    String ruta = LectorConsola.leerTexto("Introduce una ruta: ");
+                    ExploradorFicheros explorador = new ExploradorFicheros();
+                    explorador.explorar(ruta);
+                }
                 case 2 -> {
                     ImportarJson importador = new ImportarJson(inventario);
                     importador.importar("datos/ejemplos/catalogo_valido.json");
