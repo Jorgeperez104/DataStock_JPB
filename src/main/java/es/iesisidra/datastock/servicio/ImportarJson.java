@@ -1,12 +1,18 @@
 package es.iesisidra.datastock.servicio;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 
 import es.iesisidra.datastock.modelo.CatalogoJson;
 import es.iesisidra.datastock.modelo.Producto;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImportarJson {
@@ -18,42 +24,74 @@ public class ImportarJson {
     }
 
     public void importar(String ruta) {
+
         try (FileReader lector = new FileReader(ruta)) {
+
+            JsonElement raiz = JsonParser.parseReader(lector);
+            JsonObject objeto = raiz.getAsJsonObject();
+
+            if (!raiz.isJsonObject()) {
+                System.out.println("Error: el JSON debe contener un objeto.");
+                return;
+            }
+
+
+            if (!objeto.has("productos") || !objeto.get("productos").isJsonArray()) {
+                System.out.println("Error: falta la lista de productos.");
+                return;
+            }
+
+            JsonArray listaJson = objeto.getAsJsonArray("productos");
             Gson gson = new Gson();
 
-            CatalogoJson catalogo = gson.fromJson(lector, CatalogoJson.class);
+            int encontrados = listaJson.size();
+            int importados = 0;
+            int duplicados = 0;
+            int rechazados = 0;
 
-            if (catalogo != null && catalogo.getProductos() != null) {
-                int importados = 0;
-                int duplicados = 0;
-                int rechazados = 0;
+            List<String> incidencias = new ArrayList<>();
 
-                for (Producto producto : catalogo.getProductos()) {
+            for (int posicion = 0; posicion < encontrados; posicion++) {
+                JsonElement elemento = listaJson.get(posicion);
 
-                    if (!validarProducto(producto)) {
+                try {
+                    Producto producto = gson.fromJson(elemento, Producto.class);
+
+                    if (producto == null || !validarProducto(producto)) {
                         rechazados++;
+                        incidencias.add("Producto " + (posicion + 1)+ ": datos no válidos.");
                     } else if (inventario.existeCodigo(producto.getCodigo())) {
                         duplicados++;
+                        incidencias.add("Producto " + (posicion + 1)+ ": código duplicado.");
                     } else {
                         inventario.getProductos().add(producto);
                         importados++;
                     }
+
+                } catch (JsonParseException e) {
+                    rechazados++;
+                    incidencias.add("Producto " + (posicion + 1)+ ": formato incorrecto.");
                 }
-
-                System.out.println("Productos importados: " + importados);
-                System.out.println("Productos duplicados: " + duplicados);
-                System.out.println("Productos rechazados: " + rechazados);
-
-            } else {
-                System.out.println("El archivo no tiene productos.");
             }
 
-        } catch (IOException e) {
-            System.out.println("Error al leer el archivo: " + e.getMessage());
+            System.out.println("Productos encontrados: " + encontrados);
+            System.out.println("Productos importados: " + importados);
+            System.out.println("Productos duplicados: " + duplicados);
+            System.out.println("Productos rechazados: " + rechazados);
+
+            if (!incidencias.isEmpty()) {
+                System.out.println("Incidencias:");
+
+                for (String incidencia : incidencias) {
+                    System.out.println("- " + incidencia);
+                }
+            }
+
+        } catch (IOException | JsonParseException e) {
+            System.out.println("No se ha podido importar el JSON: "+ e.getMessage());
         }
     }
 
-    
     public boolean validarProducto(Producto producto) {
 
         if (producto.getCodigo() == null || producto.getCodigo().trim().isEmpty()) {

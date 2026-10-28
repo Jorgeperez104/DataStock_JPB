@@ -42,8 +42,10 @@ public class MenuPrincipal {
                     explorador.explorar(ruta);
                 }
                 case 2 -> {
+                    String ruta = LectorConsola.leerTexto("Introduce una ruta del archivo Json: ");
+
                     ImportarJson importador = new ImportarJson(inventario);
-                    importador.importar("datos/ejemplos/catalogo_valido.json");
+                    importador.importar(ruta);
                 }
                 case 3 -> pendiente("RF-FIC-03 · Importar productos desde XML");
                 case 4 -> menuConsultas();
