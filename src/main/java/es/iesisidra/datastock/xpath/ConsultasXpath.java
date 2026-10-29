@@ -46,13 +46,13 @@ public class ConsultasXpath {
                                 buscarPorCodigo(documento, sc);
                                 break;
                             case 2:
-                                buscarPorCategoria(documento,sc);
+                                buscarPorCategoria(documento, sc);
                                 break;
                             case 3:
-                                System.out.println("Consulta por precio pendiente.");
+                                buscarPorPrecio(documento, sc);
                                 break;
                             case 4:
-                                System.out.println("Consulta del contador pendiente.");
+                                contarProductos(documento);
                                 break;
                             case 0:
                                 System.out.println("Saliendo...");
@@ -117,7 +117,8 @@ public class ConsultasXpath {
                     System.out.println("Producto encontrado:");
                     System.out.println("Código: " + codigo);
                     System.out.println("Nombre: " + producto.getElementsByTagName("nombre").item(0).getTextContent());
-                    System.out.println("Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
+                    System.out.println(
+                            "Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
                     System.out.println("Stock: " + producto.getElementsByTagName("stock").item(0).getTextContent());
 
                     encontrado = true;
@@ -145,7 +146,8 @@ public class ConsultasXpath {
             try {
                 XPath xpath = XPathFactory.newInstance().newXPath();
 
-                NodeList productos = (NodeList) xpath.evaluate("/catalogo/producto[categoriaId=" + categoriaBuscar + "]",documento,XPathConstants.NODESET);
+                NodeList productos = (NodeList) xpath.evaluate(
+                        "/catalogo/producto[categoriaId=" + categoriaBuscar + "]", documento, XPathConstants.NODESET);
 
                 if (productos.getLength() == 0) {
                     System.out.println("No se han encontrado productos de esa categoría.");
@@ -155,9 +157,12 @@ public class ConsultasXpath {
                     for (int posicion = 0; posicion < productos.getLength(); posicion++) {
                         Element producto = (Element) productos.item(posicion);
 
-                        System.out.println("Código: " + producto.getElementsByTagName("codigo").item(0).getTextContent());
-                        System.out.println("Nombre: " + producto.getElementsByTagName("nombre").item(0).getTextContent());
-                        System.out.println("Categoría: " + producto.getElementsByTagName("categoriaId").item(0).getTextContent());
+                        System.out
+                                .println("Código: " + producto.getElementsByTagName("codigo").item(0).getTextContent());
+                        System.out
+                                .println("Nombre: " + producto.getElementsByTagName("nombre").item(0).getTextContent());
+                        System.out.println(
+                                "Categoría: " + producto.getElementsByTagName("categoriaId").item(0).getTextContent());
                         System.out.println("--------------------");
                     }
                 }
@@ -168,6 +173,66 @@ public class ConsultasXpath {
         }
     }
 
+    private static void buscarPorPrecio(Document documento, Scanner sc) {
+        System.out.print("Introduce el precio mínimo: ");
+        String textoPrecio = sc.nextLine().trim();
 
-    
+        double precioBuscado;
+
+        try {
+            precioBuscado = Double.parseDouble(textoPrecio);
+
+            if (precioBuscado < 0) {
+                System.out.println("Error: el precio no puede ser negativo.");
+                return;
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("Error: introduce un precio válido.");
+            return;
+        }
+
+        try {
+            XPath xpath = XPathFactory.newInstance().newXPath();
+
+            NodeList productos = (NodeList) xpath.evaluate(
+                    "/catalogo/producto[precio > " + precioBuscado + "]",
+                    documento,
+                    XPathConstants.NODESET);
+
+            if (productos.getLength() == 0) {
+                System.out.println("No hay productos con un precio superior a esa cantidad.");
+            } else {
+
+                for (int posicion = 0; posicion < productos.getLength(); posicion++) {
+                    Element producto = (Element) productos.item(posicion);
+
+                    System.out.println("Código: " + producto.getElementsByTagName("codigo").item(0).getTextContent());
+                    System.out.println("Nombre: " + producto.getElementsByTagName("nombre").item(0).getTextContent());
+                    System.out.println(
+                            "Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
+                    System.out.println("--------------------");
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al realizar la consulta.");
+        }
+    }
+
+    private static void contarProductos(Document documento) {
+        try {
+            XPath xpath = XPathFactory.newInstance().newXPath();
+
+            Double cantidad = (Double) xpath.evaluate(
+                    "count(/catalogo/producto)",
+                    documento,
+                    XPathConstants.NUMBER);
+
+            System.out.println("Número total de productos: " + cantidad.intValue());
+
+        } catch (Exception e) {
+            System.out.println("Error al contar los productos.");
+        }
+    }
 }
