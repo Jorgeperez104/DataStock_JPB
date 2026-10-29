@@ -7,6 +7,7 @@ import es.iesisidra.datastock.servicio.ConsultarProductos;
 import es.iesisidra.datastock.servicio.ExploradorFicheros;
 import es.iesisidra.datastock.servicio.ExportarJson;
 import es.iesisidra.datastock.servicio.ExportarXml;
+import es.iesisidra.datastock.servicio.GestorInventario;
 import es.iesisidra.datastock.servicio.ImportarJson;
 import es.iesisidra.datastock.servicio.ImportarXml;
 
@@ -23,6 +24,7 @@ public class MenuPrincipal {
     private final ConsultarProductos consulta;
     private final ExportarJson exportarJson;
     private final ExportarXml exportarXml;
+    private final GestorInventario gestorInventario;
 
     /** @param inventario colección común de productos de esta ejecución. */
     public MenuPrincipal(Inventario inventario) {
@@ -30,6 +32,7 @@ public class MenuPrincipal {
         this.consulta = new ConsultarProductos(inventario);
         this.exportarJson = new ExportarJson(inventario);
         this.exportarXml = new ExportarXml(inventario);
+        this.gestorInventario = new GestorInventario(inventario);
     }
 
     /** Ejecuta el menú principal hasta que el usuario selecciona salir. */
@@ -132,8 +135,8 @@ public class MenuPrincipal {
             System.out.println("0. Volver al menú principal");
             opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 2);
             switch (opcion) {
-                case 1 -> pendiente("RF-FIC-06 · Guardar inventario");
-                case 2 -> pendiente("RF-FIC-06 · Recuperar inventario");
+                case 1 -> {String ruta = LectorConsola.leerTexto("Ruta: "); gestorInventario.guardarInventario(ruta);}
+                case 2 -> {String ruta = LectorConsola.leerTexto("Ruta: "); gestorInventario.recuperarInventario(ruta);}
                 case 0 -> {
                 }
                 default -> throw new IllegalStateException("Opción inesperada");
