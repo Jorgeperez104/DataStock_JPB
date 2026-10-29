@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogo>
+    <producto>
+        <codigo>TEST-01</codigo>
+        <nombre>Monitor de prueba</nombre>
+        <precio>10.00</precio>
+        <stock>5</stock>
+        <categoriaId>1</categoriaId>
+        <proveedorId>1</proveedorId>
+    </producto>
+    <producto>
+    <codigo>TEST-02</codigo>
+    <nombre>Producto de prueba</nombre>
+    <precio>precio_incorrecto</precio>
+    <stock>5</stock>
+    <categoriaId>1</categoriaId>
+    <proveedorId>1</proveedorId>
+</producto>
+</catalogo>

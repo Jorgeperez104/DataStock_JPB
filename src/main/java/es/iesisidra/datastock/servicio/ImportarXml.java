@@ -29,6 +29,10 @@ public class ImportarXml {
             fabrica.setFeature(
                     "http://apache.org/xml/features/disallow-doctype-decl", true);
 
+            fabrica.setFeature(
+                    "http://xml.org/sax/features/external-general-entities", false);
+            fabrica.setFeature(
+                    "http://xml.org/sax/features/external-parameter-entities", false);
             DocumentBuilder constructor = fabrica.newDocumentBuilder();
             Document documento = constructor.parse(new File(ruta));
 
