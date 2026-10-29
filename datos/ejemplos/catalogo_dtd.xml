@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalogo [
+    <!ENTITY prueba "Contenido externo">
+]>
+<catalogo>
+    <producto>
+        <codigo>TEST-001</codigo>
+        <nombre>&prueba;</nombre>
+        <precio>10.00</precio>
+        <stock>5</stock>
+        <categoriaId>1</categoriaId>
+        <proveedorId>1</proveedorId>
+    </producto>
+</catalogo>

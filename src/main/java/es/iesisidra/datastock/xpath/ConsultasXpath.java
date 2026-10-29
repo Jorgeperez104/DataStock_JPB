@@ -26,7 +26,9 @@ public class ConsultasXpath {
 
         if (!fichero.exists() || !fichero.isFile()) {
             System.out.println("Error: el fichero no existe.");
-        } else {
+            return;
+
+        }
             try {
                 Document documento = cargarXML(fichero);
 
@@ -65,7 +67,7 @@ public class ConsultasXpath {
             } catch (Exception e) {
                 System.out.println("Error al leer el XML: " + e.getMessage());
             }
-        }
+        
 
         sc.close();
     }
@@ -73,13 +75,11 @@ public class ConsultasXpath {
     private static Document cargarXML(File fichero) throws Exception {
         DocumentBuilderFactory fabrica = DocumentBuilderFactory.newInstance();
 
+        fabrica.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         fabrica.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        fabrica.setFeature(
-                "http://apache.org/xml/features/disallow-doctype-decl", true);
-        fabrica.setFeature(
-                "http://xml.org/sax/features/external-general-entities", false);
-        fabrica.setFeature(
-                "http://xml.org/sax/features/external-parameter-entities", false);
+        fabrica.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        fabrica.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        fabrica.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 
         DocumentBuilder constructor = fabrica.newDocumentBuilder();
 
@@ -117,8 +117,7 @@ public class ConsultasXpath {
                     System.out.println("Producto encontrado:");
                     System.out.println("Código: " + codigo);
                     System.out.println("Nombre: " + producto.getElementsByTagName("nombre").item(0).getTextContent());
-                    System.out.println(
-                            "Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
+                    System.out.println("Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
                     System.out.println("Stock: " + producto.getElementsByTagName("stock").item(0).getTextContent());
 
                     encontrado = true;
@@ -146,8 +145,7 @@ public class ConsultasXpath {
             try {
                 XPath xpath = XPathFactory.newInstance().newXPath();
 
-                NodeList productos = (NodeList) xpath.evaluate(
-                        "/catalogo/producto[categoriaId=" + categoriaBuscar + "]", documento, XPathConstants.NODESET);
+                NodeList productos = (NodeList) xpath.evaluate("/catalogo/producto[categoriaId=" + categoriaBuscar + "]", documento, XPathConstants.NODESET);
 
                 if (productos.getLength() == 0) {
                     System.out.println("No se han encontrado productos de esa categoría.");
@@ -195,10 +193,7 @@ public class ConsultasXpath {
         try {
             XPath xpath = XPathFactory.newInstance().newXPath();
 
-            NodeList productos = (NodeList) xpath.evaluate(
-                    "/catalogo/producto[precio > " + precioBuscado + "]",
-                    documento,
-                    XPathConstants.NODESET);
+            NodeList productos = (NodeList) xpath.evaluate("/catalogo/producto[precio > " + precioBuscado + "]",documento,XPathConstants.NODESET);
 
             if (productos.getLength() == 0) {
                 System.out.println("No hay productos con un precio superior a esa cantidad.");
@@ -209,8 +204,7 @@ public class ConsultasXpath {
 
                     System.out.println("Código: " + producto.getElementsByTagName("codigo").item(0).getTextContent());
                     System.out.println("Nombre: " + producto.getElementsByTagName("nombre").item(0).getTextContent());
-                    System.out.println(
-                            "Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
+                    System.out.println("Precio: " + producto.getElementsByTagName("precio").item(0).getTextContent() + " €");
                     System.out.println("--------------------");
                 }
             }
