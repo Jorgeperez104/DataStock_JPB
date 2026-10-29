@@ -6,6 +6,7 @@ import es.iesisidra.datastock.util.LectorConsola;
 import es.iesisidra.datastock.servicio.ConsultarProductos;
 import es.iesisidra.datastock.servicio.ExploradorFicheros;
 import es.iesisidra.datastock.servicio.ExportarJson;
+import es.iesisidra.datastock.servicio.ExportarXml;
 import es.iesisidra.datastock.servicio.ImportarJson;
 import es.iesisidra.datastock.servicio.ImportarXml;
 
@@ -21,12 +22,14 @@ public class MenuPrincipal {
     private final Inventario inventario;
     private final ConsultarProductos consulta;
     private final ExportarJson exportarJson;
+    private final ExportarXml exportarXml;
 
     /** @param inventario colección común de productos de esta ejecución. */
     public MenuPrincipal(Inventario inventario) {
         this.inventario = inventario;
         this.consulta = new ConsultarProductos(inventario);
         this.exportarJson = new ExportarJson(inventario);
+        this.exportarXml = new ExportarXml(inventario);
     }
 
     /** Ejecuta el menú principal hasta que el usuario selecciona salir. */
@@ -112,7 +115,7 @@ public class MenuPrincipal {
             opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 2);
             switch (opcion) {
                 case 1 -> {String ruta = LectorConsola.leerTexto("Introduce la ruta del archivo Json : "); exportarJson.exportar(ruta);}
-                case 2 -> {String ruta = LectorConsola.leerTexto("INtroduce la ruta del archivo XML: "); }
+                case 2 -> {String ruta = LectorConsola.leerTexto("INtroduce la ruta del archivo XML: "); exportarXml.exportar(ruta);}
                 case 0 -> {
                 }
                 default -> throw new IllegalStateException("Opción inesperada");
