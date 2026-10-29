@@ -3,6 +3,7 @@ package es.iesisidra.datastock.ui;
 import es.iesisidra.datastock.servicio.Inventario;
 import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
+import es.iesisidra.datastock.servicio.ConsultarProductos;
 import es.iesisidra.datastock.servicio.ExploradorFicheros;
 import es.iesisidra.datastock.servicio.ImportarJson;
 import es.iesisidra.datastock.servicio.ImportarXml;
@@ -17,10 +18,12 @@ import es.iesisidra.datastock.servicio.ImportarXml;
  */
 public class MenuPrincipal {
     private final Inventario inventario;
+    private final ConsultarProductos consulta;
 
     /** @param inventario colección común de productos de esta ejecución. */
     public MenuPrincipal(Inventario inventario) {
         this.inventario = inventario;
+        this.consulta = new ConsultarProductos(inventario);
     }
 
     /** Ejecuta el menú principal hasta que el usuario selecciona salir. */
@@ -77,6 +80,7 @@ public class MenuPrincipal {
 
     private void menuConsultas() {
         int opcion;
+
         do {
             System.out.println("\n---------- CONSULTA DE PRODUCTOS ----------");
             System.out.println("1. Listar todos los productos");
@@ -85,9 +89,9 @@ public class MenuPrincipal {
             System.out.println("0. Volver al menú principal");
             opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 3);
             switch (opcion) {
-                case 1 -> pendiente("RF-FIC-04 · Listar productos");
-                case 2 -> pendiente("RF-FIC-04 · Buscar por código");
-                case 3 -> pendiente("RF-FIC-04 · Buscar por nombre");
+                case 1 -> consulta.listarProductos();
+                case 2 -> { String codigo = LectorConsola.leerTexto("Introduce el código: ");consulta.buscarPrCodigo(codigo);}
+                case 3 -> { String nombre = LectorConsola.leerTexto("Introduce el nombre: ");consulta.buscarPorNombre(nombre);}
                 case 0 -> {
                 }
                 default -> throw new IllegalStateException("Opción inesperada");

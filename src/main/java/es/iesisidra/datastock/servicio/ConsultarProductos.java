@@ -32,6 +32,16 @@ public class ConsultarProductos {
                 }
             }
         }
+
+        for (Producto producto : productos) {
+            System.out.println("Código: " + producto.getCodigo());
+            System.out.println("Nombre: " + producto.getNombre());
+            System.out.println("Precio: " + producto.getPrecio() + " €");
+            System.out.println("Stock: " + producto.getStock());
+            System.out.println("Categoría: " + producto.getCategoriaId());
+            System.out.println("Proveedor: " + producto.getProveedorId());
+            System.out.println("--------------------------------");
+        }
     }
 
     public void buscarPrCodigo(String codigo) {
@@ -56,7 +66,7 @@ public class ConsultarProductos {
         }
     }
 
-    public void buscarPorNombre(String nombre){
+    public void buscarPorNombre(String nombre) {
 
         boolean existe = false;
 
