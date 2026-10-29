@@ -5,6 +5,7 @@ import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
 import es.iesisidra.datastock.servicio.ExploradorFicheros;
 import es.iesisidra.datastock.servicio.ImportarJson;
+import es.iesisidra.datastock.servicio.ImportarXml;
 
 /**
  * Presentación de menús y navegación de la primera fase de DataStock.
@@ -47,7 +48,13 @@ public class MenuPrincipal {
                     ImportarJson importador = new ImportarJson(inventario);
                     importador.importar(ruta);
                 }
-                case 3 -> pendiente("RF-FIC-03 · Importar productos desde XML");
+                case 3 -> {
+                    String ruta = LectorConsola.leerTexto(
+                            "Introduce la ruta del archivo XML: ");
+
+                    ImportarXml importador = new ImportarXml(inventario);
+                    importador.importar(ruta);
+                }
                 case 4 -> menuConsultas();
                 case 5 -> menuExportaciones();
                 case 6 -> menuSerializacion();
