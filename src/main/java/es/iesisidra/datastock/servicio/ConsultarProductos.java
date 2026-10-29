@@ -55,4 +55,26 @@ public class ConsultarProductos {
             System.out.println("No hay ningún producto con ese código.");
         }
     }
+
+    public void buscarPorNombre(String nombre){
+
+        boolean existe = false;
+
+        for (Producto producto : inventario.getProductos()) {
+            if (producto.getNombre().toLowerCase().contains(nombre.toLowerCase())) {
+                System.out.println("Código: " + producto.getCodigo());
+                System.out.println("Nombre: " + producto.getNombre());
+                System.out.println("Precio: " + producto.getPrecio() + " €");
+                System.out.println("Stock: " + producto.getStock());
+                System.out.println("Categoría: " + producto.getCategoriaId());
+                System.out.println("Proveedor: " + producto.getProveedorId());
+
+                existe = true;
+            }
+        }
+
+        if (!existe) {
+            System.out.println("No hay ningún producto con ese nombre.");
+        }
+    }
 }
