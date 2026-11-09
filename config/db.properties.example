@@ -1,0 +1,3 @@
+jdbc.url=jdbc:mysql://127.0.0.1:3306/datastock?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+jdbc.user=tu_usuario
+jdbc.password=tu_contraseña
