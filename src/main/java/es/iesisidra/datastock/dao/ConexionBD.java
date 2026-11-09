@@ -1,4 +1,4 @@
-package es.iesisidra.datastock.config;
+package es.iesisidra.datastock.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
