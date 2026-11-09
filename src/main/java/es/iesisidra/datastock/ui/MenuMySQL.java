@@ -43,7 +43,7 @@ public class MenuMySQL {
                 case 4 -> MenuProductos.iniciar();
                 case 5 -> MenuConsultas.iniciar();
                 case 6 -> MenuMovimientos.iniciar();
-                case 7 -> pendiente("Historial de movimientos");
+                case 7 -> MenuHistorial.iniciar();
                 case 8 -> pendiente("Importar de memoria a MySQL");
                 case 9 -> pendiente("Demostración commit/rollback");
                 case 0 -> { }
