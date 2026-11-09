@@ -37,8 +37,8 @@ public class MenuMySQL {
 
             switch (opcion) {
                 case 1 -> pendiente("Comprobar conexión");
-                case 2 -> pendiente("Gestionar categorías");
-                case 3 -> pendiente("Gestionar proveedores");
+                case 2 -> MenuCategorias.iniciar();
+                case 3 -> MenuProveedores.iniciar();
                 case 4 -> pendiente("Gestionar productos");
                 case 5 -> pendiente("Consultar y buscar productos");
                 case 6 -> pendiente("Entradas y salidas de stock");
