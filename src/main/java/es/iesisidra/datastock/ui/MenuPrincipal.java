@@ -40,14 +40,15 @@ public class MenuPrincipal {
         int opcion;
         do {
             mostrarCabecera();
-            System.out.println("1. Explorar ficheros y directorios");
-            System.out.println("2. Importar productos desde JSON");
-            System.out.println("3. Importar productos desde XML");
-            System.out.println("4. Consultar productos");
-            System.out.println("5. Exportar productos");
-            System.out.println("6. Guardar y recuperar inventario");
+            System.out.println("1. Explorar ficheros y directorios (UT1)");
+            System.out.println("2. Importar productos desde JSON (UT1)");
+            System.out.println("3. Importar productos desde XML (UT1)");
+            System.out.println("4. Consultar productos (UT1)");
+            System.out.println("5. Exportar productos (UT1)");
+            System.out.println("6. Guardar y recuperar inventario (UT1)");
+            System.out.println("7. Gestionar base de datos MySQL (UT2)");
             System.out.println("0. Salir");
-            opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 6);
+            opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 7);
             switch (opcion) {
                 case 1 -> {
                     String ruta = LectorConsola.leerTexto("Introduce una ruta: ");
@@ -70,7 +71,7 @@ public class MenuPrincipal {
                 case 4 -> menuConsultas();
                 case 5 -> menuExportaciones();
                 case 6 -> menuSerializacion();
-                case 7 -> gestionMysql();
+                   case 7 -> new MenuMySQL(inventario).iniciar();
                 case 0 -> System.out.println(ColoresConsola.pintar("Hasta pronto.", ColoresConsola.VERDE));
                 default -> throw new IllegalStateException("Opción inesperada");
             }
@@ -81,7 +82,7 @@ public class MenuPrincipal {
         System.out.println(
                 ColoresConsola.pintar("\n================================================", ColoresConsola.CIAN));
         System.out.println(ColoresConsola.pintar("         DATASTOCK - GESTIÓN DE INVENTARIO", ColoresConsola.NEGRITA));
-        System.out.println(ColoresConsola.pintar("                 FASE 1 - UT1", ColoresConsola.CIAN));
+        System.out.println(ColoresConsola.pintar("                 FASE 2 - UT2", ColoresConsola.CIAN));
         System.out.println(
                 ColoresConsola.pintar("================================================", ColoresConsola.CIAN));
         System.out.println(ColoresConsola.pintar("Productos en memoria: " + inventario.getProductos().size(),
@@ -142,39 +143,6 @@ public class MenuPrincipal {
                 }
                 default -> throw new IllegalStateException("Opción inesperada");
             }
-        } while (opcion != 0);
-    }
-
-    /**
-     * Sustituir las llamadas por servicios propios a medida que se implementen los
-     * RF.
-     */
-    private void pendiente(String requisito) {
-        System.out.println(ColoresConsola.pintar("[PENDIENTE] " + requisito, ColoresConsola.AMARILLO));
-        System.out.println("Esta funcionalidad debe desarrollarla el alumnado.");
-        LectorConsola.pausar();
-    }
-
-    private void gestionMysql(){
-        int opcion;
-
-        do {
-            System.out.println("--- GESTIÓN MYSQL (UT2)---");
-            System.out.println("1. Comprobar conexión y mostrar información de la BD");
-            System.out.println("2. Gestionar categorías");
-            System.out.println("3. Gestionar proveedores");
-            System.out.println("4. Gestionar productos (CRUD)");
-            System.out.println("5. Consultar y buscar productos");
-            System.out.println("6. Registrar entrada o salida de stock");
-            System.out.println("7. Consultar el historial de movimientos");
-            System.out.println("8. Importar productos de memoria a Mysql");
-            System.out.println("9. Demostración de transacción con commit/rollback");
-            System.out.println("0. Volver al menú principal");
-
-            opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 9);
-
-
-
         } while (opcion != 0);
     }
 }
