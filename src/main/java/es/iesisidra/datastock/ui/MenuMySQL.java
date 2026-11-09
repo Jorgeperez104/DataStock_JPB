@@ -1,5 +1,6 @@
 package es.iesisidra.datastock.ui;
 
+import es.iesisidra.datastock.dao.ComprobarConexion;
 import es.iesisidra.datastock.servicio.Inventario;
 import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
@@ -36,10 +37,10 @@ public class MenuMySQL {
             opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 9);
 
             switch (opcion) {
-                case 1 -> pendiente("Comprobar conexión");
+                case 1 -> ComprobarConexion.comprobar();
                 case 2 -> MenuCategorias.iniciar();
                 case 3 -> MenuProveedores.iniciar();
-                case 4 -> pendiente("Gestionar productos");
+                case 4 -> MenuProductos.iniciar();
                 case 5 -> pendiente("Consultar y buscar productos");
                 case 6 -> pendiente("Entradas y salidas de stock");
                 case 7 -> pendiente("Historial de movimientos");
