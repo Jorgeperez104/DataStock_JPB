@@ -70,6 +70,7 @@ public class MenuPrincipal {
                 case 4 -> menuConsultas();
                 case 5 -> menuExportaciones();
                 case 6 -> menuSerializacion();
+                case 7 -> gestionMysql();
                 case 0 -> System.out.println(ColoresConsola.pintar("Hasta pronto.", ColoresConsola.VERDE));
                 default -> throw new IllegalStateException("Opción inesperada");
             }
@@ -152,5 +153,28 @@ public class MenuPrincipal {
         System.out.println(ColoresConsola.pintar("[PENDIENTE] " + requisito, ColoresConsola.AMARILLO));
         System.out.println("Esta funcionalidad debe desarrollarla el alumnado.");
         LectorConsola.pausar();
+    }
+
+    private void gestionMysql(){
+        int opcion;
+
+        do {
+            System.out.println("--- GESTIÓN MYSQL (UT2)---");
+            System.out.println("1. Comprobar conexión y mostrar información de la BD");
+            System.out.println("2. Gestionar categorías");
+            System.out.println("3. Gestionar proveedores");
+            System.out.println("4. Gestionar productos (CRUD)");
+            System.out.println("5. Consultar y buscar productos");
+            System.out.println("6. Registrar entrada o salida de stock");
+            System.out.println("7. Consultar el historial de movimientos");
+            System.out.println("8. Importar productos de memoria a Mysql");
+            System.out.println("9. Demostración de transacción con commit/rollback");
+            System.out.println("0. Volver al menú principal");
+
+            opcion = LectorConsola.leerOpcion("Selecciona una opción: ", 0, 9);
+
+
+
+        } while (opcion != 0);
     }
 }

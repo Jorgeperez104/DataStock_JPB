@@ -23,8 +23,7 @@ public class ConsultarProductos {
 
         for (int posicion = 0; posicion < productos.size() - 1; posicion++) {
             for (int siguiente = 0; siguiente < productos.size() - 1 - posicion; siguiente++) {
-                if (productos.get(siguiente).getCodigo().compareToIgnoreCase(
-                        productos.get(siguiente + 1).getCodigo()) > 0) {
+                if (productos.get(siguiente).getCodigo().compareToIgnoreCase(productos.get(siguiente + 1).getCodigo()) > 0) {
 
                     Producto auxiliar = productos.get(siguiente);
                     productos.set(siguiente, productos.get(siguiente + 1));
