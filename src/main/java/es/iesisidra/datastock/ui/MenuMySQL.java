@@ -41,7 +41,7 @@ public class MenuMySQL {
                 case 2 -> MenuCategorias.iniciar();
                 case 3 -> MenuProveedores.iniciar();
                 case 4 -> MenuProductos.iniciar();
-                case 5 -> pendiente("Consultar y buscar productos");
+                case 5 -> MenuConsultas.iniciar();
                 case 6 -> pendiente("Entradas y salidas de stock");
                 case 7 -> pendiente("Historial de movimientos");
                 case 8 -> pendiente("Importar de memoria a MySQL");

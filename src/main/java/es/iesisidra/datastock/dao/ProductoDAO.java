@@ -89,4 +89,100 @@ public class ProductoDAO {
             return ps.executeUpdate();
         }
     }
+
+    public static java.util.List<ProductoDetalle> listarTodos() throws SQLException {
+        java.util.List<ProductoDetalle> lista = new java.util.ArrayList<>();
+        String sql = """
+            SELECT p.codigo, p.nombre, p.precio, p.stock,
+                   p.categoria_id, c.nombre AS categoria_nombre,
+                   p.proveedor_id, pr.nombre AS proveedor_nombre
+            FROM producto p
+            JOIN categoria c ON p.categoria_id = c.id
+            JOIN proveedor pr ON p.proveedor_id = pr.id
+            ORDER BY p.codigo ASC
+        """;
+        try (Connection con = ConexionBD.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new ProductoDetalle(
+                    rs.getString("codigo"),
+                    rs.getString("nombre"),
+                    rs.getBigDecimal("precio"),
+                    rs.getInt("stock"),
+                    rs.getInt("categoria_id"),
+                    rs.getString("categoria_nombre"),
+                    rs.getInt("proveedor_id"),
+                    rs.getString("proveedor_nombre")
+                ));
+            }
+        }
+        return lista;
+    }
+
+    public static java.util.List<ProductoDetalle> buscarPorNombre(String texto) throws SQLException {
+        java.util.List<ProductoDetalle> lista = new java.util.ArrayList<>();
+        String sql = """
+            SELECT p.codigo, p.nombre, p.precio, p.stock,
+                   p.categoria_id, c.nombre AS categoria_nombre,
+                   p.proveedor_id, pr.nombre AS proveedor_nombre
+            FROM producto p
+            JOIN categoria c ON p.categoria_id = c.id
+            JOIN proveedor pr ON p.proveedor_id = pr.id
+            WHERE LOWER(p.nombre) LIKE LOWER(?)
+            ORDER BY p.codigo ASC
+        """;
+        try (Connection con = ConexionBD.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, "%" + texto.trim() + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new ProductoDetalle(
+                        rs.getString("codigo"),
+                        rs.getString("nombre"),
+                        rs.getBigDecimal("precio"),
+                        rs.getInt("stock"),
+                        rs.getInt("categoria_id"),
+                        rs.getString("categoria_nombre"),
+                        rs.getInt("proveedor_id"),
+                        rs.getString("proveedor_nombre")
+                    ));
+                }
+            }
+        }
+        return lista;
+    }
+
+    public static java.util.List<ProductoDetalle> buscarPorStockMenor(int umbral) throws SQLException {
+        java.util.List<ProductoDetalle> lista = new java.util.ArrayList<>();
+        String sql = """
+            SELECT p.codigo, p.nombre, p.precio, p.stock,
+                   p.categoria_id, c.nombre AS categoria_nombre,
+                   p.proveedor_id, pr.nombre AS proveedor_nombre
+            FROM producto p
+            JOIN categoria c ON p.categoria_id = c.id
+            JOIN proveedor pr ON p.proveedor_id = pr.id
+            WHERE p.stock < ?
+            ORDER BY p.stock ASC, p.codigo ASC
+        """;
+        try (Connection con = ConexionBD.obtenerConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, umbral);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new ProductoDetalle(
+                        rs.getString("codigo"),
+                        rs.getString("nombre"),
+                        rs.getBigDecimal("precio"),
+                        rs.getInt("stock"),
+                        rs.getInt("categoria_id"),
+                        rs.getString("categoria_nombre"),
+                        rs.getInt("proveedor_id"),
+                        rs.getString("proveedor_nombre")
+                    ));
+                }
+            }
+        }
+        return lista;
+    }
 }
