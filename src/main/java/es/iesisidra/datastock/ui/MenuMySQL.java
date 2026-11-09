@@ -1,6 +1,7 @@
 package es.iesisidra.datastock.ui;
 
 import es.iesisidra.datastock.dao.ComprobarConexion;
+import es.iesisidra.datastock.servicio.ImportarMemoria;
 import es.iesisidra.datastock.servicio.Inventario;
 import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
@@ -44,7 +45,7 @@ public class MenuMySQL {
                 case 5 -> MenuConsultas.iniciar();
                 case 6 -> MenuMovimientos.iniciar();
                 case 7 -> MenuHistorial.iniciar();
-                case 8 -> pendiente("Importar de memoria a MySQL");
+                case 8 -> ImportarMemoria.importarMemoriaMySQL(inventario);
                 case 9 -> pendiente("Demostración commit/rollback");
                 case 0 -> { }
                 default -> throw new IllegalStateException("Opción inesperada");
