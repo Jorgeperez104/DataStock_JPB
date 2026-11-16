@@ -1,5 +1,6 @@
 package es.iesisidra.datastock.ui;
 
+import es.iesisidra.datastock.dao.ConsultaProductoJdbc;
 import es.iesisidra.datastock.dao.ProductoDAO;
 import es.iesisidra.datastock.modelo.ProductoDetalle;
 import es.iesisidra.datastock.util.ColoresConsola;
@@ -9,6 +10,7 @@ import es.iesisidra.datastock.validaciones.Validador;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class MenuConsultas {
 
@@ -65,20 +67,24 @@ public class MenuConsultas {
 
     private static void buscarPorCodigo() {
         System.out.println("\n-- Búsqueda por Código --");
+        ConsultaProductoJdbc consultaJdbc = new ConsultaProductoJdbc();
         try {
-            String cod = LectorConsola.leerTexto("Código del producto: ");
-            cod = Validador.validarCodigo(cod);
+            String codigo = LectorConsola.leerTexto("Código del producto: ");
+            codigo = Validador.validarCodigo(codigo);
 
-            ProductoDetalle p = ProductoDAO.buscarPorCodigo(cod);
-            if (p == null) {
-                ColoresConsola.aviso("No se ha encontrado ningún producto con el código " + cod);
+            Optional<ProductoDetalle> resultado = consultaJdbc.buscarPorCodigo(codigo);
+            if (resultado.isEmpty()) {
+                ColoresConsola.aviso("No se ha encontrado ningún producto con el código " + codigo);
                 return;
             }
-            mostrarTabla(List.of(p));
+            System.out.println(ColoresConsola.pintar("[OK] Producto encontrado en MySQL:", ColoresConsola.VERDE));
+            mostrarTabla(List.of(resultado.get()));
+
+
         } catch (IllegalArgumentException e) {
-            ColoresConsola.error(e.getMessage());
+            System.out.println(ColoresConsola.pintar("[ERROR] " + e.getMessage(), ColoresConsola.ROJO));
         } catch (SQLException e) {
-            ColoresConsola.error(ListadoErrores.traducir(e));
+            System.out.println(ColoresConsola.pintar("[ERROR] " + ListadoErrores.traducir(e), ColoresConsola.ROJO));
         }
     }
 
