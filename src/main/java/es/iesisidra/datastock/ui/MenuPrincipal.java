@@ -1,8 +1,15 @@
 package es.iesisidra.datastock.ui;
 
 import es.iesisidra.datastock.servicio.Inventario;
+import es.iesisidra.datastock.ut3.LectorProductosJson;
 import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import es.iesisidra.datastock.modelo.Producto;
 import es.iesisidra.datastock.servicio.ConsultarProductos;
 import es.iesisidra.datastock.servicio.ExploradorFicheros;
 import es.iesisidra.datastock.servicio.ExportarJson;
@@ -57,9 +64,27 @@ public class MenuPrincipal {
                 }
                 case 2 -> {
                     String ruta = LectorConsola.leerTexto("Introduce una ruta del archivo Json: ");
+                    LectorProductosJson lectorJson = new LectorProductosJson();
 
-                    ImportarJson importador = new ImportarJson(inventario);
-                    importador.importar(ruta);
+                    try {
+                        List<Producto> productosLeidos = lectorJson.leerProductos(Path.of(ruta.trim()));
+                        int importados = 0;
+                        int duplicados = 0;
+
+                        for (Producto producto : productosLeidos) {
+                            if (inventario.existeCodigo(producto.getCodigo())) {
+                                duplicados++;
+                            } else {
+                                inventario.getProductos().add(producto);
+                                importados++;
+                            }
+                        }
+
+                        System.out.println(ColoresConsola.pintar("[OK] Importación JSON completada. Encontrados: " + productosLeidos.size() + " | Importados: " + importados + " | Duplicados omitidos: " + duplicados, ColoresConsola.VERDE));
+
+                    } catch (IllegalArgumentException | IOException e) {
+                        System.out.println(ColoresConsola.pintar("[ERROR] No se ha podido importar el JSON: " + e.getMessage(), ColoresConsola.ROJO));
+                    }
                 }
                 case 3 -> {
                     String ruta = LectorConsola.leerTexto(
@@ -82,7 +107,7 @@ public class MenuPrincipal {
         System.out.println(
                 ColoresConsola.pintar("\n================================================", ColoresConsola.CIAN));
         System.out.println(ColoresConsola.pintar("         DATASTOCK - GESTIÓN DE INVENTARIO", ColoresConsola.NEGRITA));
-        System.out.println(ColoresConsola.pintar("                 FASE 2 - UT2", ColoresConsola.CIAN));
+        System.out.println(ColoresConsola.pintar("                 FASE 3 - UT3", ColoresConsola.CIAN));
         System.out.println(
                 ColoresConsola.pintar("================================================", ColoresConsola.CIAN));
         System.out.println(ColoresConsola.pintar("Productos en memoria: " + inventario.getProductos().size(),
