@@ -1,7 +1,7 @@
 package es.iesisidra.datastock.ui;
 
 import es.iesisidra.datastock.servicio.Inventario;
-import es.iesisidra.datastock.ut3.LectorProductosJson;
+import es.iesisidra.datastock.servicio.LectorProductosJson;
 import es.iesisidra.datastock.util.ColoresConsola;
 import es.iesisidra.datastock.util.LectorConsola;
 
