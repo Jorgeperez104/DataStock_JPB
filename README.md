@@ -1,34 +1,32 @@
-# DataStock – Proyecto inicial (UT1)
+# DataStock – Proyecto Integrador (Entrega 3 – UT3)
 
 **Módulo:** Acceso a Datos · 2.º DAM · IES Isidra de Guzmán · Curso 2026–2027  
 **Lenguaje:** Java 21 · **Construcción:** Maven · **Interfaz:** consola
 
 ## 1. ¿Qué es este proyecto?
 
-DataStock es una práctica **individual e integradora** que evolucionará durante tres unidades:
+DataStock es una práctica **individual e integradora** desarrollada a lo largo de tres unidades de trabajo:
 
 - **UT1 – Ficheros:** importar JSON/XML, consultar en memoria, exportar, serializar y desarrollar dos actividades independientes (XPath y `RandomAccessFile`).
-- **UT2 – JDBC:** incorporar MySQL, operaciones SQL y transacciones.
-- **UT3 – Componentes:** reorganizar el acceso a datos en componentes reutilizables.
-
-**Esta entrega inicial solo prepara la UT1.** El código entregado **no resuelve** los requisitos funcionales: los menús muestran mensajes `[PENDIENTE]` hasta que se implementen.
+- **UT2 – JDBC:** incorporar MySQL, operaciones CRUD SQL, consultas y transacciones con commit/rollback.
+- **UT3 – Componentes:** reorganizar el acceso a ficheros JSON y la consulta JDBC por código en componentes reutilizables desacoplados de la interfaz de consola.
 
 ## 2. Requisitos previos
 
 - JDK **21** instalado y seleccionado en el IDE (`java -version`).
 - Maven instalado, o un IDE con integración Maven.
+- Servidor **MySQL** activo con la base de datos `datastock` creada mediante el script de `material_referencia/DataStock_BD_MySQL.sql` y credenciales configuradas en `config/db.properties`.
 - Consola con UTF-8 para ver correctamente tildes y símbolos.
 
 ## 3. Cómo abrir y ejecutar
 
-1. Descomprime el ZIP y abre **la carpeta que contiene `pom.xml`** como proyecto Maven en IntelliJ IDEA, Eclipse o VS Code.
-2. Espera a que Maven descargue la dependencia Gson (requiere conexión a Internet la primera vez).
-3. Ejecuta `es.iesisidra.datastock.App` desde el IDE, o en una terminal situada en la raíz:
+1. Abre **la carpeta que contiene `pom.xml`** (`DataStock_UT1_Proyecto_Inicial`) como proyecto Maven en VS Code, IntelliJ IDEA o Eclipse.
+2. Espera a que Maven descargue las dependencias configuradas (Gson, conector JDBC de MySQL y JUnit).
+3. Ejecuta `es.iesisidra.datastock.App` desde el IDE, o en una terminal situada en la raíz del proyecto:
 
 ```bash
 mvn clean compile
 mvn exec:java
-```
 
 Para ejecutar las actividades complementarias (todavía pendientes de desarrollar):
 
@@ -46,27 +44,29 @@ DataStock_UT1_Proyecto_Inicial/
 ├── pom.xml
 ├── README.md
 ├── .gitignore
+├── config/
+│   └── db.properties                  # Configuración de conexión JDBC a MySQL
 ├── datos/
-│   ├── ejemplos/              # JSON/XML para comenzar las pruebas
-│   └── salidas/               # Exportaciones y binarios generados
-├── material_referencia/       # Modelo relacional y script SQL para UT2
+│   ├── ejemplos/                      # JSON/XML de prueba (válidos, con errores y mal formados)
+│   └── salidas/                       # Exportaciones y binarios generados
+├── material_referencia/               # Modelo relacional y script SQL
 └── src/main/java/es/iesisidra/datastock/
-    ├── App.java               # Punto de entrada
-    ├── modelo/
-    │   ├── Producto.java
-    │   ├── Categoria.java
-    │   ├── Proveedor.java
-    │   └── MovimientoStock.java
+    ├── App.java                       # Punto de entrada
+    ├── modelo/                        # Clases de dominio (Producto, ProductoDetalle, Categoria, Proveedor, MovimientoStock)
+    ├── dao/
+    │   ├── ConexionBD.java            # Gestión de conexiones MySQL
+    │   ├── ProductoDAO.java           # Operaciones CRUD y listados de productos
+    │   └── ConsultaProductoJdbc.java  # [UT3] Componente reutilizable de consulta JDBC por código
     ├── servicio/
-    │   └── Inventario.java    # Colección compartida en memoria
+    │   ├── Inventario.java            # Colección compartida en memoria
+    │   ├── ImportarJson.java          # Implementación original UT1
+    │   └── LectorProductosJson.java   # [UT3] Componente reutilizable de lectura y validación JSON
     ├── ui/
-    │   └── MenuPrincipal.java # Menú principal y submenús
-    ├── util/
-    │   ├── LectorConsola.java
-    │   └── ColoresConsola.java
-    └── complementarias/
-        ├── XPathActividad.java
-        └── AccesoAleatorioActividad.java
+    │   ├── MenuPrincipal.java         # Menú principal (opción 2 integrada con LectorProductosJson)
+    │   ├── MenuMySQL.java             # Menú de gestión MySQL (UT2)
+    │   └── MenuConsultas.java         # Submenú 7.5 (opción 2 integrada con ConsultaProductoJdbc)
+    ├── util/                          # Utilidades de consola, colores y traducción de errores
+    └── validaciones/                  # Validaciones de formato y dominio
 ```
 
 ## 5. Menús que ya aparecen
@@ -74,48 +74,46 @@ DataStock_UT1_Proyecto_Inicial/
 **Menú principal:**
 
 ```text
-1. Explorar ficheros y directorios     RF-FIC-01
-2. Importar productos desde JSON       RF-FIC-02
-3. Importar productos desde XML        RF-FIC-03
-4. Consultar productos                 RF-FIC-04
-5. Exportar productos                  RF-FIC-05
-6. Guardar y recuperar inventario      RF-FIC-06
+1. Explorar ficheros y directorios (UT1)
+2. Importar productos desde JSON (UT1)     -> Delega en LectorProductosJson
+3. Importar productos desde XML (UT1)
+4. Consultar productos (UT1)
+5. Exportar productos (UT1)
+6. Guardar y recuperar inventario (UT1)
+7. Gestionar base de datos MySQL (UT2)
 0. Salir
 ```
 
-**4. Consultar productos:** listar, buscar por código, buscar por nombre, volver.  
-**5. Exportar productos:** exportar JSON, exportar XML, volver.  
-**6. Guardar y recuperar inventario:** guardar `.dat`, recuperar `.dat`, volver.
+1. Listar todos los productos
+2. Buscar producto por código              -> Delega en ConsultaProductoJdbc
+3. Buscar productos por nombre
+4. Consultar productos con stock inferior a un umbral
+0. Volver al menú MySQL
 
 `RF-FIC-07` (XPath) y `RF-FIC-08` (`RandomAccessFile`) se ejecutan en clases independientes.
 
-## 6. ¿Qué está hecho y qué debes programar?
+ ## 6. Cuestiones a responder en el README
 
-**Se proporciona:** clases del modelo con Javadoc y getters/setters, colección inicial vacía, navegación de menús, lectura básica de consola, colores ANSI opcionales, configuración Maven y datos de ejemplo.
+## 1. Ventajas e inconvenientes de separar la lectura JSON del menú
+Separar la lectura y validación del fichero JSON en la clase independiente LectorProductosJson aporta claridad y reutilización: el componente recibe únicamente una ruta (Path), valida la estructura del JSON y las reglas de negocio de Producto, y devuelve una lista de productos válidos o lanza excepciones controladas. Al no depender de Scanner, de System.out ni del Inventario en memoria, esta misma clase puede reutilizarse desde una interfaz gráfica, un servicio web o una batería de pruebas unitarias sin modificar su código.
 
-**Debes implementar:** la exploración de rutas, lectura/validación/importación JSON y XML, consultas, exportación, serialización y recuperación, XPath y acceso aleatorio. También debes crear las pruebas y registrar sus resultados.
+Como contrapartida, dividir la lógica en más clases introduce un ligero coste estructural: aumenta el número de ficheros a mantener en el proyecto, obliga a diseñar contratos claros entre capas (qué parámetros recibe cada método y qué excepciones propaga) y requiere trasladar al menú la gestión de duplicados en el inventario y el formateo de los mensajes de salida ([OK] y [ERROR]).
 
-**Importante:** el menú solo debe **presentar opciones y delegar**. No coloques en el `switch` la lógica de ficheros, JSON, XML, validaciones o serialización. Puedes crear tus propios paquetes y clases, por ejemplo `ficheros`, `validacion`, `servicio`.
+## 2. Importancia de separar una consulta JDBC de la presentación por consola
+Aislar la consulta SQL en ConsultaProductoJdbc evita mezclar código de acceso a datos (Connection, PreparedStatement, ResultSet) con lógica de interfaz de usuario. De este modo, el componente se encarga exclusivamente de obtener la conexión desde ConexionBD, ejecutar la consulta parametrizada de forma segura frente a inyección SQL, cerrar automáticamente los recursos mediante try-with-resources y devolver un Optional<ProductoDetalle> que indica de forma explícita si el producto existe o no. La presentación por consola queda centralizada en el menú, que decide cómo mostrar la ficha del producto, los avisos o los errores SQL traducidos al usuario.
 
-La clase `Inventario` contiene la lista compartida; el alumnado debe implementar las reglas de alta, búsqueda y sustitución conforme al enunciado. **No se precargan productos:** se empieza con el inventario vacío.
+## 3. Herramientas utilizadas en el desarrollo
+IDE (Visual Studio Code): utilizado para escribir y refactorizar el código Java, gestionar las ramas y commits de Git, y ejecutar y depurar la aplicación.
 
-## 7. Reglas clave del enunciado
+Apache Maven: empleado para gestionar la estructura estándar del proyecto, compilar con Java 21, resolver las dependencias externas (Gson y el driver JDBC de MySQL) y ejecutar plugins como Javadoc.
 
-- JSON raíz `productos` y XML raíz `catalogo` con elementos `producto`.
-- Los campos del producto son `codigo`, `nombre`, `precio`, `stock`, `categoriaId` y `proveedorId`.
-- Los códigos no se duplican, incluso si cambia el uso de mayúsculas/minúsculas.
-- Un documento mal formado o con estructura general inválida **no modifica** el inventario.
-- Si el documento es válido pero contiene registros incorrectos, se incorporan solo los válidos.
-- Importar JSON/XML **añade** productos; recuperar un `.dat` **sustituye** el inventario, tras confirmar cuando corresponda.
-- En UT1 no hay base de datos: los ID de categoría y proveedor se comprueban como enteros positivos, pero no se buscan en MySQL.
-- El fichero `stock.bin` de RF-FIC-08 es una **copia independiente**: los cambios hechos allí no actualizan la colección Java.
+Javadoc: utilizado para documentar las clases públicas de los nuevos componentes (LectorProductosJson y ConsultaProductoJdbc) y sus métodos, especificando su finalidad, parámetros (@param), valor de retorno (@return) y excepciones lanzadas (@throws).
 
-## 8. GitHub, documentación y pruebas
+Git / GitHub: empleado para controlar las versiones mediante commits descriptivos sobre una rama de desarrollo y etiquetar la entrega final de la UT3.
 
-Crea un repositorio individual, realiza commits con mensajes significativos y mantén actualizado este README con las instrucciones reales de tu solución. Entrega el documento de pruebas cumplimentado con los casos de aceptación del enunciado y conserva ejemplos de entradas válidas e inválidas.
+## 4. Opciones de DataStock modificadas para integrar los componentes
+Opción 2 del Menú Principal (MenuPrincipal.java – Importar productos desde JSON): ahora instancia LectorProductosJson, le pasa la ruta (Path) introducida por el usuario, incorpora al Inventario los productos válidos recibidos omitiendo códigos duplicados y muestra el resultado [OK] en verde o [ERROR] en rojo.
 
-Antes de entregar, comprueba que `mvn clean compile` funciona, que el menú no termina ante entradas inválidas y que puedes explicar el código de cada requisito. La práctica y la prueba individual se evaluarán conforme a la programación didáctica.
+Opción 7 > 5 > 2 (MenuConsultas.java – Buscar producto por código en MySQL): ahora delega la búsqueda en ConsultaProductoJdbc.buscarPorCodigo(cod) y, a partir del Optional<ProductoDetalle> devuelto, presenta la ficha del producto con [OK] en verde, un aviso si no existe o un [ERROR] en rojo ante entradas inválidas o fallos de conexión.
 
-## 9. Referencia
-
-Consulta el **enunciado DataStock UT1** facilitado en el aula virtual: es la fuente que determina el comportamiento exigido. El SQL y el diagrama del directorio `material_referencia` se facilitan para entender el proyecto completo; **no hay que conectar MySQL en UT1**.
+## Fin de la práctica DataStock
